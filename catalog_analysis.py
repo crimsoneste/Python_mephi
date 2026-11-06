@@ -56,22 +56,34 @@ def duration_in_hours(minutes):
     
     return f"{hours}ч {mins}м"
 
+def rating_tier(rating):
+    if rating >= 9:
+        # Тернарный оператор: если оценка 9.5, вернет "шедевр высшего класса", иначе "шедевр"
+        return "шедевр высшего класса" if rating > 9.5 else "шедевр"
+    elif 7 <= rating <= 8.9:
+        return "хорошо"
+    elif 5 <= rating <= 6.9:
+        return "средние"
+    else:
+        return "слабо"
 
+
+def decade_label(year):
+    match year:
+        case y if y > 2020:
+            return "новые"
+        case y if 2015 <= y <= 2020:
+            return "недавние"
+        case _:
+            # Сюда попадут все остальные годы (раньше 2015)
+            return "старые"
+
+        
 if __name__ == "__main__":
-    import random
+    print("--- Проверка rating_tier ---")
+    for r in [9.8, 9.0, 8.5, 7.0, 6.9, 5.0, 4.9]:
+        print(f"Оценка {r}: {rating_tier(r)}")
 
-    try:
-        print("1:", average_rating(movies))
-    except Exception as e:
-        print("Ошибка в average_rating:", e)
-
-    try:
-        print("2:", catalog_age_stats(movies))
-    except Exception as e:
-        print("Ошибка в catalog_age_stats:", e)
-
-    try:
-        for _ in range(3):
-            print("3:", duration_in_hours(random.randint(45, 200)))
-    except Exception as e:
-        print("Ошибка в duration_in_hours:", e)
+    print("\n--- Проверка decade_label ---")
+    for y in [2025, 2021, 2020, 2018, 2015, 2014, 1990]:
+        print(f"Год {y}: {decade_label(y)}")
