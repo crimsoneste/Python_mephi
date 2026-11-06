@@ -193,16 +193,20 @@ def genres_only_in_one(movies_a, movies_b):
     return genres_a - genres_b
 
 
+def iter_high_rated(movies, min_rating=8.0):
+    for movie in movies:
+        if movie["rating"] >= min_rating:
+            # используем yield
+            yield movie
+
+
 if __name__ == "__main__":
-    print("--- Проверка этапа 7 ---")
+    print("--- Проверка этапа 8 ---")
+    print("\n1. Фильмы с рейтингом >= 8.0 (через генератор и format_report_line):")
     
-    print("\n1. Все уникальные жанры в каталоге:")
-    print(all_genres(movies))
+    for movie in iter_high_rated(movies):
+        print(format_report_line(movie))
+        
+    print("\n2. Суммарная длительность фильмов с рейтингом > 7 (в минутах):")
+    print(sum(m["duration_min"] for m in movies if m["rating"] > 7))
     
-    print("\n2. Общие актеры для movies[0] и movies[3]:")
-    # ожидаем {"O. Isaac"}
-    print(common_actors(movies[0], movies[3]))
-    
-    print("\n3. Жанры, которые есть в movies[5:6], но нет в movies[:5]:")
-    # ожидаем {"mystery"}
-    print(genres_only_in_one(movies[5:6], movies[:5]))
