@@ -38,7 +38,7 @@ def average_rating(movies):
 def catalog_age_stats(movies, current_year=2026):
 
     if not movies:
-        return tuple() # Возвращаем пустой кортеж, если список пуст
+        return tuple() 
     
     ages = [current_year - movie["year"] for movie in movies]
     
@@ -58,7 +58,7 @@ def duration_in_hours(minutes):
 
 def rating_tier(rating):
     if rating >= 9:
-        # Тернарный оператор: если оценка 9.5, вернет "шедевр высшего класса", иначе "шедевр"
+        # Тернарный оператор
         return "шедевр высшего класса" if rating > 9.5 else "шедевр"
     elif 7 <= rating <= 8.9:
         return "хорошо"
@@ -75,15 +75,39 @@ def decade_label(year):
         case y if 2015 <= y <= 2020:
             return "недавние"
         case _:
-            # Сюда попадут все остальные годы (раньше 2015)
             return "старые"
 
-        
-if __name__ == "__main__":
-    print("--- Проверка rating_tier ---")
-    for r in [9.8, 9.0, 8.5, 7.0, 6.9, 5.0, 4.9]:
-        print(f"Оценка {r}: {rating_tier(r)}")
+print("--- Фильмы не в жанре comedy ---")
+for movie in movies:
+    if "comedy" in movie["genres"]:
+        continue  
+    print(movie["title"])
 
-    print("\n--- Проверка decade_label ---")
-    for y in [2025, 2021, 2020, 2018, 2015, 2014, 1990]:
-        print(f"Год {y}: {decade_label(y)}")
+
+print("\n--- Поиск шедевра (рейтинг > 9.0) ---")
+index = 0
+found = False 
+
+while index < len(movies):
+    if movies[index]["rating"] > 9.0:
+        print(f"Найден шедевр: {movies[index]['title']}")
+        found = True
+        break  
+    index += 1
+else:
+    print("Шедевров не найдено")
+
+def count_long_movies(movies, threshold=120):
+    count = 0  
+    for movie in movies:
+        if movie["duration_min"] > threshold:
+            count += 1
+    return count
+
+
+if __name__ == "__main__":
+    print("\n=== ТЕСТ ФУНКЦИИ count_long_movies ===")
+
+    print(f"Фильмов дольше 120 мин: {count_long_movies(movies)}")
+    
+    print(f"Фильмов дольше 100 мин: {count_long_movies(movies, 100)}")
