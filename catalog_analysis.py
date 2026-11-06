@@ -130,14 +130,30 @@ def format_report_line(movie):
     return f'"{movie["title"]}" ({movie["year"]}) — {movie["rating"]}/10, {duration}, жанры: {sorted_genres}'
 
 
+def titles_sorted_by_rating(movies):
+    sorted_movies = sorted(movies, key=lambda movie: movie["rating"], reverse=True)
+    titles = [movie["title"] for movie in sorted_movies]
+    
+    return titles
+
+
+def top_n_by_rating(movies, n=3):
+    sorted_movies = sorted(movies, key=lambda movie: movie["rating"], reverse=True)
+    top_n = [(movie["title"], movie["rating"]) for movie in sorted_movies[:n]]
+    
+    return top_n
+
 if __name__ == "__main__":
-    print("--- Проверка этапа 4 ---")
+    print("--- Проверка этапа 5 ---")
     
-    print(normalize_title("silent hours"))        # Ожидается: Silent Hours
-    print(normalize_title("midnight in oslo"))    # Ожидается: Midnight In Oslo
+    print("Топ по рейтингу (только названия):")
+    for title in titles_sorted_by_rating(movies)[:3]:
+        print(f"  - {title}")
+        
+    print("\nТоп-3 в виде кортежей:")
+    top3 = top_n_by_rating(movies, 3)
+    print(top3)
     
-    print(make_slug("Silent Hours"))              # Ожидается: silent-hours
-    print(make_slug("The Quiet Algorithm"))       # Ожидается: the-quiet-algorithm
+    print(f"Тип первого элемента: {type(top3[0])}")
     
-    print(format_report_line(movies[7]))          
-    # Ожидается: "The Quiet Algorithm" (2024) — 9.2/10, 1ч 58м, жанры: drama, sci-fi
+    print(f"\nПервый фильм в исходном списке (ожидаем 'The Dune Chronicles'): {movies[0]['title']}")
