@@ -2,7 +2,8 @@ import math
 
 movies = [
     {"title": "The Dune Chronicles", "year": 2021, "genres": {"sci-fi", "drama"},
-     "rating": 8.6, "duration_min": 155, "actors": ["T. Chalamet", "R. Ferguson", "O. Isaac"]},
+     "rating": 8.6, "duration_min": 155, "actors": ["T. Chalamet", "R. Ferguson", 
+                                                    "O. Isaac"]},
     {"title": "Kitchen Stories", "year": 2019, "genres": {"comedy", "drama"},
      "rating": 7.1, "duration_min": 98, "actors": ["A. Novak", "M. Ferguson"]},
     {"title": "silent hours", "year": 2016, "genres": {"thriller", "drama"},
@@ -143,17 +144,47 @@ def top_n_by_rating(movies, n=3):
     
     return top_n
 
+
+def count_by_genre(movies):
+    genre_counts = {}
+    
+    for movie in movies:
+        for genre in movie["genres"]:
+            genre_counts[genre] = genre_counts.get(genre, 0) + 1
+            
+    return genre_counts
+
+
+def actor_filmography(movies):
+    filmography = {}
+    
+    for movie in movies:
+        for actor in movie["actors"]:
+            if actor not in filmography:
+                filmography[actor] = []
+            filmography[actor].append(movie["title"])
+            
+    return filmography
+
+
 if __name__ == "__main__":
-    print("--- Проверка этапа 5 ---")
+    print("--- Проверка этапа 6 ---")
     
-    print("Топ по рейтингу (только названия):")
-    for title in titles_sorted_by_rating(movies)[:3]:
-        print(f"  - {title}")
-        
-    print("\nТоп-3 в виде кортежей:")
-    top3 = top_n_by_rating(movies, 3)
-    print(top3)
+    print("\n1. Количество фильмов по жанрам:")
+    genres_dict = count_by_genre(movies)
+    print(genres_dict)
     
-    print(f"Тип первого элемента: {type(top3[0])}")
+    print("\n2. Фильмография актеров (первые 3 актера для примера):")
+    actors_dict = actor_filmography(movies)
+    # 3 элементта на пример
+    for actor, films in list(actors_dict.items())[:3]:
+        print(f"  {actor}: {films}")
+
+    print("\n3. Фильмы с рейтингом выше среднего:")
+    avg = average_rating(movies)
+    print(f"   Средний рейтинг: {avg}")
     
-    print(f"\nПервый фильм в исходном списке (ожидаем 'The Dune Chronicles'): {movies[0]['title']}")
+    high_rated_movies = {movie["title"]: movie["rating"] for movie in movies if movie["rating"] > avg}
+    
+    for title, rating in high_rated_movies.items():
+        print(f"  {title}: {rating}")
