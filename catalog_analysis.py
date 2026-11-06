@@ -77,7 +77,8 @@ def decade_label(year):
         case _:
             return "старые"
 
-print("--- Фильмы не в жанре comedy ---")
+
+""" print("--- Фильмы не в жанре comedy ---")
 for movie in movies:
     if "comedy" in movie["genres"]:
         continue  
@@ -95,7 +96,7 @@ while index < len(movies):
         break  
     index += 1
 else:
-    print("Шедевров не найдено")
+    print("Шедевров не найдено") """
 
 def count_long_movies(movies, threshold=120):
     count = 0  
@@ -105,9 +106,38 @@ def count_long_movies(movies, threshold=120):
     return count
 
 
-if __name__ == "__main__":
-    print("\n=== ТЕСТ ФУНКЦИИ count_long_movies ===")
-
-    print(f"Фильмов дольше 120 мин: {count_long_movies(movies)}")
+def normalize_title(title):
+    words = title.split()
+    normalized_words = []
     
-    print(f"Фильмов дольше 100 мин: {count_long_movies(movies, 100)}")
+    for word in words:
+        normalized_words.append(word[0].upper() + word[1:])
+        
+    return " ".join(normalized_words)
+
+
+def make_slug(title):
+    slug = title.lower()
+    slug = slug.replace(" ", "-")
+    return slug
+
+
+def format_report_line(movie):
+    duration = duration_in_hours(movie["duration_min"])
+    sorted_genres = ", ".join(sorted(movie["genres"]))
+    
+    # Собираем итоговую строку. 
+    return f'"{movie["title"]}" ({movie["year"]}) — {movie["rating"]}/10, {duration}, жанры: {sorted_genres}'
+
+
+if __name__ == "__main__":
+    print("--- Проверка этапа 4 ---")
+    
+    print(normalize_title("silent hours"))        # Ожидается: Silent Hours
+    print(normalize_title("midnight in oslo"))    # Ожидается: Midnight In Oslo
+    
+    print(make_slug("Silent Hours"))              # Ожидается: silent-hours
+    print(make_slug("The Quiet Algorithm"))       # Ожидается: the-quiet-algorithm
+    
+    print(format_report_line(movies[7]))          
+    # Ожидается: "The Quiet Algorithm" (2024) — 9.2/10, 1ч 58м, жанры: drama, sci-fi
