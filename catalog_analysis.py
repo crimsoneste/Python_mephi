@@ -167,24 +167,42 @@ def actor_filmography(movies):
     return filmography
 
 
-if __name__ == "__main__":
-    print("--- Проверка этапа 6 ---")
-    
-    print("\n1. Количество фильмов по жанрам:")
-    genres_dict = count_by_genre(movies)
-    print(genres_dict)
-    
-    print("\n2. Фильмография актеров (первые 3 актера для примера):")
-    actors_dict = actor_filmography(movies)
-    # 3 элементта на пример
-    for actor, films in list(actors_dict.items())[:3]:
-        print(f"  {actor}: {films}")
+def all_genres(movies):
+    genres_set = set()
+    for movie in movies:
+        genres_set = genres_set | movie["genres"] 
+    return genres_set
 
-    print("\n3. Фильмы с рейтингом выше среднего:")
-    avg = average_rating(movies)
-    print(f"   Средний рейтинг: {avg}")
+
+def common_actors(movie1, movie2):
+    actors1 = set(movie1["actors"])
+    actors2 = set(movie2["actors"])
     
-    high_rated_movies = {movie["title"]: movie["rating"] for movie in movies if movie["rating"] > avg}
+    return actors1 & actors2
+
+
+def genres_only_in_one(movies_a, movies_b):
+    genres_a = set()
+    for movie in movies_a:
+        genres_a.update(movie["genres"])
+        
+    genres_b = set()
+    for movie in movies_b:
+        genres_b.update(movie["genres"])
+        
+    return genres_a - genres_b
+
+
+if __name__ == "__main__":
+    print("--- Проверка этапа 7 ---")
     
-    for title, rating in high_rated_movies.items():
-        print(f"  {title}: {rating}")
+    print("\n1. Все уникальные жанры в каталоге:")
+    print(all_genres(movies))
+    
+    print("\n2. Общие актеры для movies[0] и movies[3]:")
+    # ожидаем {"O. Isaac"}
+    print(common_actors(movies[0], movies[3]))
+    
+    print("\n3. Жанры, которые есть в movies[5:6], но нет в movies[:5]:")
+    # ожидаем {"mystery"}
+    print(genres_only_in_one(movies[5:6], movies[:5]))
