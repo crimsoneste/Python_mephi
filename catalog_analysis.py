@@ -79,26 +79,6 @@ def decade_label(year):
             return "старые"
 
 
-""" print("--- Фильмы не в жанре comedy ---")
-for movie in movies:
-    if "comedy" in movie["genres"]:
-        continue  
-    print(movie["title"])
-
-
-print("\n--- Поиск шедевра (рейтинг > 9.0) ---")
-index = 0
-found = False 
-
-while index < len(movies):
-    if movies[index]["rating"] > 9.0:
-        print(f"Найден шедевр: {movies[index]['title']}")
-        found = True
-        break  
-    index += 1
-else:
-    print("Шедевров не найдено") """
-
 def count_long_movies(movies, threshold=120):
     count = 0  
     for movie in movies:
@@ -128,8 +108,10 @@ def format_report_line(movie):
     sorted_genres = ", ".join(sorted(movie["genres"]))
     
     # Собираем итоговую строку. 
-    return f'"{movie["title"]}" ({movie["year"]}) — {movie["rating"]}/10, {duration}, жанры: {sorted_genres}'
-
+    return (
+        f'"{movie["title"]}" ({movie["year"]}) — {movie["rating"]}/10, '
+        f"{duration}, жанры: {sorted_genres}"
+    )
 
 def titles_sorted_by_rating(movies):
     sorted_movies = sorted(movies, key=lambda movie: movie["rating"], reverse=True)
@@ -200,13 +182,39 @@ def iter_high_rated(movies, min_rating=8.0):
             yield movie
 
 
-if __name__ == "__main__":
-    print("--- Проверка этапа 8 ---")
-    print("\n1. Фильмы с рейтингом >= 8.0 (через генератор и format_report_line):")
+def build_report(movies):
     
-    for movie in iter_high_rated(movies):
-        print(format_report_line(movie))
-        
-    print("\n2. Суммарная длительность фильмов с рейтингом > 7 (в минутах):")
-    print(sum(m["duration_min"] for m in movies if m["rating"] > 7))
+    # 1. Общая статистика
+    print(f"Средний рейтинг: {average_rating(movies)}")
+    print(f"Средний возраст фильмов: {catalog_age_stats(movies)[2]} лет\n")
+
+    
+    # 2. Топ-3 фильма
+    print("Топ-3 фильма:")
+    top_titles = top_n_by_rating(movies, 3)
+    
+    for title, rating in top_titles:
+        for movie in movies:
+            if movie["title"] == title:
+                temp_movie = movie.copy()
+                temp_movie["title"] = normalize_title(movie["title"])
+                print(format_report_line(temp_movie))
+                break
+    print()
+
+    # 3. Фильмы по жанрам
+    print("Фильмов по жанрам:")
+    genres_count = count_by_genre(movies)
+    sorted_genres = sorted(genres_count.items(), key=lambda item: (-item[1], item[0]))
+    
+    for genre, count in sorted_genres:
+        print(f"  {genre} — {count}")
+    print()
+
+    # Жанры по каталогу
+    all_genres_str = ", ".join(sorted(all_genres(movies)))
+    print(f"Все жанры каталога: {all_genres_str}")
+
+if __name__ == "__main__":
+    build_report(movies)
     
