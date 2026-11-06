@@ -78,6 +78,27 @@ def decade_label(year):
         case _:
             return "старые"
 
+# Этап 3 задания 6-7
+""" print("--- Фильмы не в жанре comedy ---")
+for movie in movies:
+    if "comedy" in movie["genres"]:
+        continue  
+    print(movie["title"])
+
+
+print("\n--- Поиск шедевра (рейтинг > 9.0) ---")
+index = 0
+found = False 
+
+while index < len(movies):
+    if movies[index]["rating"] > 9.0:
+        print(f"Найден шедевр: {movies[index]['title']}")
+        found = True
+        break  
+    index += 1
+else:
+    print("Шедевров не найдено") """
+
 
 def count_long_movies(movies, threshold=120):
     count = 0  
