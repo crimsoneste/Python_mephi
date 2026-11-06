@@ -1,3 +1,5 @@
+import math
+
 movies = [
     {"title": "The Dune Chronicles", "year": 2021, "genres": {"sci-fi", "drama"},
      "rating": 8.6, "duration_min": 155, "actors": ["T. Chalamet", "R. Ferguson", "O. Isaac"]},
@@ -20,3 +22,56 @@ movies = [
     {"title": "Red Harbor", "year": 2018, "genres": {"action", "thriller"},
      "rating": 7.3, "duration_min": 129, "actors": ["P. Diaz", "T. Chalamet"]},
 ]
+
+
+def average_rating(movies):
+
+    if not movies:
+        return 0.0
+    
+    total_rating = sum(movie["rating"] for movie in movies)
+    avg = total_rating / len(movies)
+    
+    return round(avg, 1)
+
+
+def catalog_age_stats(movies, current_year=2026):
+
+    if not movies:
+        return tuple() # Возвращаем пустой кортеж, если список пуст
+    
+    ages = [current_year - movie["year"] for movie in movies]
+    
+    oldest = max(ages)
+    newest = min(ages)
+    average = math.ceil(sum(ages) / len(ages))
+    
+    return tuple([oldest, newest, average])
+
+
+def duration_in_hours(minutes):
+
+    hours = minutes // 60       
+    mins = minutes % 60        
+    
+    return f"{hours}ч {mins}м"
+
+
+if __name__ == "__main__":
+    import random
+
+    try:
+        print("1:", average_rating(movies))
+    except Exception as e:
+        print("Ошибка в average_rating:", e)
+
+    try:
+        print("2:", catalog_age_stats(movies))
+    except Exception as e:
+        print("Ошибка в catalog_age_stats:", e)
+
+    try:
+        for _ in range(3):
+            print("3:", duration_in_hours(random.randint(45, 200)))
+    except Exception as e:
+        print("Ошибка в duration_in_hours:", e)
